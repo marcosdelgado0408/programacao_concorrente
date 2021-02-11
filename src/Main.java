@@ -3,6 +3,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*
+ yellow_tripdata_2016-01.csv dataset dowload: https://www.kaggle.com/gopalkalpnde/nyc-tlc-data
+*/ 
+
+
 public class Main {
 
     public static void main(String[] args) {
