@@ -7,32 +7,38 @@ import java.util.*;
 
 
 
-public class Point {
-    public int val;
+public class Point extends Thread{
+    public double val;
     public double x, y; // coordenada do ponto
     public double distance;
 
+    public Point(double x, double y, double val) {
+        this.x = x;
+        this.y = y;
+        this.val = val;
+    }
 
-    public int getVal() { return val; }
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public double getDistance() { return distance; }
-
-    public void setVal(int val) {this.val = val; }
-    public void setX(double x) { this.x = x; }
-    public void setY(double y) { this.y = y; }
-    public void setDistance(double distance) { this.distance = distance; }
-
-
-
-//    public boolean comparison(Point a, Point b){
-//        return a.distance < b.distance;
-//    }
+    public Point() {
+        this.x = 0;
+        this.y = 0;
+        this.val = 0;
+    }
 
 
-    public int classifyPoint(Point[] arr, int dataPointsNumber, int k, Point point){ // metodo para classificação de um ponto desconhecido p
+    public double classifyPoint(Point[] arr, int dataPointsNumber, int k, Point point){ // metodo para classificação de um ponto desconhecido p
+
+
         for(int i=0;i<dataPointsNumber;i++){
-            arr[i].distance = Math.sqrt((arr[i].x - point.x) * (arr[i].x - point.x) + (arr[i].y - point.y) * (arr[i].y - point.y)); // calculo distância euclidiana
+
+            int finalI = i; // o metodo so aceita que ele utilize uma variavel incializada
+            Thread thread = new Thread(){
+                @Override
+                public void run() {
+                    arr[finalI].distance = Math.sqrt((arr[finalI].x - point.x) * (arr[finalI].x - point.x) + (arr[finalI].y - point.y) * (arr[finalI].y - point.y)); // calculo distância euclidiana
+                }
+            };
+
+
         }
 
         Arrays.sort(arr, new Comparator<Point>() { // ordenar o array por distância -> crescente
@@ -43,32 +49,20 @@ public class Point {
         });
 
 
-        for(int i=0;i<arr.length;i++){
-            System.out.println(arr[i].distance);
-        }
-
-
         /*
         * irá pesquisar os valores até uma distância determinada k do ponto desconhecido p
         * */
-        int freq1 = 0;
-        int freq2 = 0;
+
+        double media = 0;
         for(int i=0;i<k;i++){
-            if(arr[i].val == 0){
-                freq1++;
-            }
-            else if(arr[i].val == 1){
-                freq2++;
-            }
+            media += arr[i].val; // media dos precos
         }
-        return (freq1 > freq2 ? 0 : 1);
+
+        media = media / k;
+
+        return media;
 
     }
-
-
-
-
-
 
 
 
