@@ -3,10 +3,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
- yellow_tripdata_2016-01.csv dataset dowload: https://www.kaggle.com/gopalkalpnde/nyc-tlc-data
-*/ 
-
 
 public class Main {
 
@@ -30,9 +26,8 @@ public class Main {
         }
 
 
-        int n = 17; // Number of data points
+//        int n = 17; // Number of data points
         Point[] arr = points.toArray(Point[]::new);
-
 
 
         /*Testing Point*/
