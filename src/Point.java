@@ -26,7 +26,6 @@ public class Point {
     }
 
 
-
     public double classifyPoint(Point[] arr, int dataPointsNumber, int k, Point point){ // metodo para classificação de um ponto desconhecido p
 
         Thread threadDistEucl = new Thread(){
