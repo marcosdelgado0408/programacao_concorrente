@@ -37,9 +37,12 @@ public class Main {
 
         // Parameter to decide group of the testing point
         int k = 3;
-        System.out.println("The value classified to unknown point is " + p.classifyPoint(arr, arr.length, k, p));
 
+        SerialClassify serialClassify = new SerialClassify();
+        ConcurrentClassify concurrentClassify = new ConcurrentClassify();
+        SynchronizedClassify synchronizedClassify = new SynchronizedClassify();
 
+        System.out.println("The value classified to unknown point is " + synchronizedClassify.classifyPoint(arr, arr.length, k, p));
 
     }
 
