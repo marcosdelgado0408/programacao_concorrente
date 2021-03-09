@@ -1,3 +1,5 @@
+package br.ufrn;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ArrayList<Point> points = new ArrayList<>();
+        ArrayList<Point> points = new ArrayList<>(); // adding dataset
 
         try {
             File file = new File("yellow_tripdata_2016-01.csv");
@@ -18,7 +20,7 @@ public class Main {
 
             while(scanner.hasNextLine()){
                 String[] line = scanner.nextLine().split(",");
-                points.add(new Point( Double.parseDouble(line[3]), Double.parseDouble(line[4]), Double.parseDouble(line[12]) ));
+                points.add(new Point( Double.parseDouble(line[3]), Double.parseDouble(line[4]), Double.parseDouble(line[12]) )); // x = passanger_count / y = trip_distance / val = fare_amount
             }
         }
         catch (FileNotFoundException e) {
@@ -26,7 +28,6 @@ public class Main {
         }
 
 
-//        int n = 17; // Number of data points
         Point[] arr = points.toArray(Point[]::new);
 
 
@@ -41,8 +42,17 @@ public class Main {
         SerialClassify serialClassify = new SerialClassify();
         ConcurrentClassify concurrentClassify = new ConcurrentClassify();
         SynchronizedClassify synchronizedClassify = new SynchronizedClassify();
+        {
+            ClassifyTest classifyJcTest = new ClassifyTest();
+            classifyJcTest.setArr(arr);
+            classifyJcTest.setP(p);
+            classifyJcTest.setK(k);
+            classifyJcTest.setDataPointsNumber(arr.length);
+        }
 
-        System.out.println("The value classified to unknown point is " + synchronizedClassify.classifyPoint(arr, arr.length, k, p));
+
+        System.out.println("The value classified to unknown point is " + serialClassify.classifyPoint(arr, arr.length, k, p));
+
 
     }
 

@@ -1,3 +1,5 @@
+package br.ufrn;
+
 import java.util.Arrays;
 import java.util.Comparator;
 

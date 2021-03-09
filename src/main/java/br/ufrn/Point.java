@@ -1,3 +1,5 @@
+package br.ufrn;
+
 public class Point {
 
     public double val;

@@ -3,6 +3,7 @@
  * ponto de um training data sample
  * */
 
+package br.ufrn;
 import java.util.Arrays;
 import java.util.Comparator;
 
