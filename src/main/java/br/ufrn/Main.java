@@ -42,13 +42,7 @@ public class Main {
         SerialClassify serialClassify = new SerialClassify();
         ConcurrentClassify concurrentClassify = new ConcurrentClassify();
         SynchronizedClassify synchronizedClassify = new SynchronizedClassify();
-        {
-            ClassifyTest classifyJcTest = new ClassifyTest();
-            classifyJcTest.setArr(arr);
-            classifyJcTest.setP(p);
-            classifyJcTest.setK(k);
-            classifyJcTest.setDataPointsNumber(arr.length);
-        }
+        AtomicClassify atomicClassify = new AtomicClassify();
 
 
         System.out.println("The value classified to unknown point is " + serialClassify.classifyPoint(arr, arr.length, k, p));

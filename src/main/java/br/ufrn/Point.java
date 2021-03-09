@@ -1,6 +1,6 @@
 package br.ufrn;
 
-public class Point {
+public class Point implements Comparable<Point>{
 
     public double val;
     public double x, y; // coordenada do ponto
@@ -32,6 +32,19 @@ public class Point {
         this.x = 0;
         this.y = 0;
         this.val = 0;
+    }
+
+
+    @Override
+    public int compareTo(Point o) {
+        if(this.distance < o.distance){
+            return -1;
+        }
+        else if(o.distance < this.distance){
+            return 1;
+        }
+        return 0;
+
     }
 
 

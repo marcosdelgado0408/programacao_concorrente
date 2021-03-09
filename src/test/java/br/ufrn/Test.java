@@ -1,5 +1,4 @@
 package br.ufrn;
-
 import org.openjdk.jmh.Main;
 
 public class Test {
