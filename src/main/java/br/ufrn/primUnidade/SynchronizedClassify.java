@@ -3,7 +3,9 @@
  * ponto de um training data sample
  * */
 
-package br.ufrn;
+package br.ufrn.primUnidade;
+import br.ufrn.Point;
+
 import java.util.Arrays;
 import java.util.Comparator;
 

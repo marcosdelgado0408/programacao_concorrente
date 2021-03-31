@@ -1,6 +1,6 @@
 package br.ufrn.Tests;
 
-import br.ufrn.Counter;
+import br.ufrn.primUnidade.Counter;
 import br.ufrn.Point;
 import org.openjdk.jcstress.annotations.Actor;
 import org.openjdk.jcstress.annotations.Expect;

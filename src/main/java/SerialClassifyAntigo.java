@@ -14,8 +14,6 @@ public class SerialClassifyAntigo{
         return arr;
     }
 
-
-
     public Point[] sortPointArray(Point[] arr){
 
         Arrays.sort(arr, new  Comparator<>() { // ordenar o array por "distance" -> crescente

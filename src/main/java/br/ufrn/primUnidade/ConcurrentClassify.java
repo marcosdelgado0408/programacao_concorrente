@@ -1,33 +1,19 @@
-package br.ufrn;
+package br.ufrn.primUnidade;
+
+import br.ufrn.Point;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
-public class AtomicClassify {
+public class ConcurrentClassify {
 
     public double classifyPoint(Point[] arr, int dataPointsNumber, int k, Point point){ // metodo para classificação de um ponto desconhecido p
 
 
-
-        AtomicReferenceArray<Point> atomicArr = new AtomicReferenceArray<Point>(arr);
-        System.out.println(atomicArr.get(0).distance);
-
-
-
         Thread threadDistEucl = new Thread( ()-> {
 
-
-
             for(int i=0;i<dataPointsNumber;i++){
-                Point point1 = new Point();
-                point1.x = atomicArr.get(i).x;
-                point1.y = atomicArr.get(i).y;
-                point1.val = atomicArr.get(i).val;
-                point1.distance = Math.sqrt((atomicArr.get(i).x - point.x) * (atomicArr.get(i).x - point.x) + (atomicArr.get(i).y - point.y) * (atomicArr.get(i).y - point.y));
-
-                atomicArr.set(i, point1);
-
+                arr[i].distance = Math.sqrt((arr[i].x - point.x) * (arr[i].x - point.x) + (arr[i].y - point.y) * (arr[i].y - point.y)); // calculo distância euclidiana
             }
 
         });
@@ -36,7 +22,6 @@ public class AtomicClassify {
 
         Thread comparator = new Thread( () -> {
 
-            //Não possuo controle do algoritmo de ordenção
             Arrays.sort(arr, new Comparator<Point>() { // ordenar o array por distância -> crescente
                 @Override
                 public int compare(Point o1, Point o2) {
@@ -79,4 +64,5 @@ public class AtomicClassify {
         return 0;
 
     }
+
 }

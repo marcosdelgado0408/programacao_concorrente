@@ -1,14 +1,22 @@
 package br.ufrn;
 
+import br.ufrn.primUnidade.AtomicClassify;
+import br.ufrn.primUnidade.ConcurrentClassify;
+import br.ufrn.primUnidade.SynchronizedClassify;
+import br.ufrn.segUnidade.CallableFutureClassify;
+import br.ufrn.segUnidade.ExecutorClassify;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+
 
         ArrayList<Point> points = new ArrayList<>(); // adding dataset
 
@@ -43,9 +51,11 @@ public class Main {
         ConcurrentClassify concurrentClassify = new ConcurrentClassify();
         SynchronizedClassify synchronizedClassify = new SynchronizedClassify();
         AtomicClassify atomicClassify = new AtomicClassify();
+        ExecutorClassify executorClassify = new ExecutorClassify();
+        CallableFutureClassify callableFutureClassify = new CallableFutureClassify();
 
 
-        System.out.println("The value classified to unknown point is " + serialClassify.classifyPoint(arr, arr.length, k, p));
+        System.out.println("The value classified to unknown point is " + callableFutureClassify.classifyPoint(arr, arr.length, k, p));
 
 
     }
