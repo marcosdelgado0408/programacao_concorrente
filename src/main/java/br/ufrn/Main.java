@@ -6,6 +6,7 @@ import br.ufrn.primUnidade.SynchronizedClassify;
 import br.ufrn.segUnidade.CallableFutureClassify;
 import br.ufrn.segUnidade.ExecutorClassify;
 import br.ufrn.segUnidade.ForkJoin.ForkJoinClassify;
+import br.ufrn.segUnidade.ParallelStreamsClassify;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,12 +56,13 @@ public class Main {
         ExecutorClassify executorClassify = new ExecutorClassify();
         CallableFutureClassify callableFutureClassify = new CallableFutureClassify();
 
-        // vamos utilizar o Points no forkJoin
+        // vamos utilizar o Points no forkJoin e no parallelStreamsClassify
         ForkJoinClassify forkJoinClassify = new ForkJoinClassify();
+        ParallelStreamsClassify parallelStreamsClassify = new ParallelStreamsClassify();
 
 //        System.out.println("The value classified to unknown point is " + callableFutureClassify.classifyPoint(arr, arr.length, k, p));
 
-        System.out.println("The value classified to unknown point is " + forkJoinClassify.classifyPoint(points, points.size(), k, p));
+        System.out.println("The value classified to unknown point is " + parallelStreamsClassify.classifyPoint(points, points.size(), k, p));
 
     }
 
