@@ -47,6 +47,10 @@ public class Point implements Comparable<Point>{
 
     }
 
+    @Override
+    public String toString() {
+        return " [ val - " + val + "|" + "dist - " + distance + "] ";
+    }
 
 
 }
