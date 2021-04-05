@@ -21,12 +21,18 @@ public class Point implements Comparable<Point>{
 
 
 
+    public Point(double x, double y){
+        this.x = x;
+        this.y = y;
+    }
+
 
     public Point(double x, double y, double val) {
         this.x = x;
         this.y = y;
         this.val = val;
     }
+
 
     public Point() {
         this.x = 0;

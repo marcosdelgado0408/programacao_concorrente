@@ -21,7 +21,12 @@ public class ForkJoinClassify {
 
         arr = pool.invoke(task1);
 
-        Collections.sort(arr);
+        arr.sort(new  Comparator<>() { // ordenar o array por "distance" -> crescente
+            @Override
+            public int compare(Point o1, Point o2) {
+                return Double.compare(o1.distance, o2.distance);
+            }
+        });
 
 
 //        RecursiveMedia task2 = new RecursiveMedia(arr, k, 0);

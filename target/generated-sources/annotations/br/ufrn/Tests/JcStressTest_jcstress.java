@@ -15,17 +15,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Callable;
 import java.util.Collections;
 import java.util.List;
-import br.ufrn.Tests.ClassifyJcStress.StressTest;
+import br.ufrn.Tests.JcStressTest;
 import org.openjdk.jcstress.infra.results.III_Result_jcstress;
-import br.ufrn.Tests.ClassifyJcStress_MyState_jcstress;
 
-public class ClassifyJcStress_StressTest_jcstress extends Runner<III_Result_jcstress> {
+public class JcStressTest_jcstress extends Runner<III_Result_jcstress> {
 
-    StressTest test;
-    volatile StateHolder<ClassifyJcStress_MyState_jcstress, III_Result_jcstress> version;
+    volatile StateHolder<JcStressTest, III_Result_jcstress> version;
 
-    public ClassifyJcStress_StressTest_jcstress(TestConfig config, TestResultCollector collector, ExecutorService pool) {
-        super(config, collector, pool, "br.ufrn.Tests.ClassifyJcStress.StressTest");
+    public JcStressTest_jcstress(TestConfig config, TestResultCollector collector, ExecutorService pool) {
+        super(config, collector, pool, "br.ufrn.Tests.JcStressTest");
     }
 
     @Override
@@ -37,11 +35,12 @@ public class ClassifyJcStress_StressTest_jcstress extends Runner<III_Result_jcst
     }
 
     private void sanityCheck_API(Counter<III_Result_jcstress> counter) throws Throwable {
-        final ClassifyJcStress_MyState_jcstress s = new ClassifyJcStress_MyState_jcstress();
+        final JcStressTest s = new JcStressTest();
         final III_Result_jcstress r = new III_Result_jcstress();
-        final StressTest t = new StressTest();
         Collection<Future<?>> res = new ArrayList<>();
-        res.add(pool.submit(() -> t.setConfig(s, r)));
+        res.add(pool.submit(() -> s.actor1(r)));
+        res.add(pool.submit(() -> s.actor2(r)));
+        res.add(pool.submit(() -> s.actor3(r)));
         for (Future<?> f : res) {
             try {
                 f.get();
@@ -54,14 +53,15 @@ public class ClassifyJcStress_StressTest_jcstress extends Runner<III_Result_jcst
 
     private void sanityCheck_Footprints(Counter<III_Result_jcstress> counter) throws Throwable {
         config.adjustStrides(size -> {
-            version = new StateHolder<>(new ClassifyJcStress_MyState_jcstress[size], new III_Result_jcstress[size], 1, config.spinLoopStyle);
-            final StressTest t = new StressTest();
+            version = new StateHolder<>(new JcStressTest[size], new III_Result_jcstress[size], 3, config.spinLoopStyle);
             for (int c = 0; c < size; c++) {
                 III_Result_jcstress r = new III_Result_jcstress();
-                ClassifyJcStress_MyState_jcstress s = new ClassifyJcStress_MyState_jcstress();
+                JcStressTest s = new JcStressTest();
                 version.rs[c] = r;
                 version.ss[c] = s;
-                t.setConfig(s, r);
+                s.actor1(r);
+                s.actor2(r);
+                s.actor3(r);
                 counter.record(r);
             }
         });
@@ -69,13 +69,14 @@ public class ClassifyJcStress_StressTest_jcstress extends Runner<III_Result_jcst
 
     @Override
     public Counter<III_Result_jcstress> internalRun() {
-        test = new StressTest();
-        version = new StateHolder<>(new ClassifyJcStress_MyState_jcstress[0], new III_Result_jcstress[0], 1, config.spinLoopStyle);
+        version = new StateHolder<>(new JcStressTest[0], new III_Result_jcstress[0], 3, config.spinLoopStyle);
 
         control.isStopped = false;
 
         List<Callable<Counter<III_Result_jcstress>>> tasks = new ArrayList<>();
-        tasks.add(this::setConfig);
+        tasks.add(this::actor1);
+        tasks.add(this::actor2);
+        tasks.add(this::actor3);
         Collections.shuffle(tasks);
 
         Collection<Future<Counter<III_Result_jcstress>>> results = new ArrayList<>();
@@ -103,16 +104,16 @@ public class ClassifyJcStress_StressTest_jcstress extends Runner<III_Result_jcst
         return counter;
     }
 
-    public final void jcstress_consume(StateHolder<ClassifyJcStress_MyState_jcstress, III_Result_jcstress> holder, Counter<III_Result_jcstress> cnt, int a, int actors) {
-        ClassifyJcStress_MyState_jcstress[] ss = holder.ss;
+    public final void jcstress_consume(StateHolder<JcStressTest, III_Result_jcstress> holder, Counter<III_Result_jcstress> cnt, int a, int actors) {
+        JcStressTest[] ss = holder.ss;
         III_Result_jcstress[] rs = holder.rs;
         int len = ss.length;
         int left = a * len / actors;
         int right = (a + 1) * len / actors;
         for (int c = left; c < right; c++) {
             III_Result_jcstress r = rs[c];
-            ClassifyJcStress_MyState_jcstress s = ss[c];
-            ss[c] = new ClassifyJcStress_MyState_jcstress();
+            JcStressTest s = ss[c];
+            ss[c] = new JcStressTest();
             cnt.record(r);
             r.r1 = 0;
             r.r2 = 0;
@@ -120,56 +121,116 @@ public class ClassifyJcStress_StressTest_jcstress extends Runner<III_Result_jcst
         }
     }
 
-    public final void jcstress_updateHolder(StateHolder<ClassifyJcStress_MyState_jcstress, III_Result_jcstress> holder) {
+    public final void jcstress_updateHolder(StateHolder<JcStressTest, III_Result_jcstress> holder) {
         if (!holder.tryStartUpdate()) return;
-        ClassifyJcStress_MyState_jcstress[] ss = holder.ss;
+        JcStressTest[] ss = holder.ss;
         III_Result_jcstress[] rs = holder.rs;
         int len = ss.length;
 
         int newLen = holder.updateStride ? Math.max(config.minStride, Math.min(len * 2, config.maxStride)) : len;
 
-        ClassifyJcStress_MyState_jcstress[] newS = ss;
+        JcStressTest[] newS = ss;
         III_Result_jcstress[] newR = rs;
         if (newLen > len) {
             newS = Arrays.copyOf(ss, newLen);
             newR = Arrays.copyOf(rs, newLen);
             for (int c = len; c < newLen; c++) {
                 newR[c] = new III_Result_jcstress();
-                newS[c] = new ClassifyJcStress_MyState_jcstress();
+                newS[c] = new JcStressTest();
             }
          }
 
-        version = new StateHolder<>(control.isStopped, newS, newR, 1, config.spinLoopStyle);
+        version = new StateHolder<>(control.isStopped, newS, newR, 3, config.spinLoopStyle);
         holder.finishUpdate();
    }
 
-    public final Counter<III_Result_jcstress> setConfig() {
+    public final Counter<III_Result_jcstress> actor1() {
 
-        StressTest lt = test;
         Counter<III_Result_jcstress> counter = new Counter<>();
         while (true) {
-            StateHolder<ClassifyJcStress_MyState_jcstress,III_Result_jcstress> holder = version;
+            StateHolder<JcStressTest,III_Result_jcstress> holder = version;
             if (holder.stopped) {
                 return counter;
             }
 
-            ClassifyJcStress_MyState_jcstress[] ss = holder.ss;
+            JcStressTest[] ss = holder.ss;
             III_Result_jcstress[] rs = holder.rs;
             int size = ss.length;
 
             holder.preRun();
 
             for (int c = 0; c < size; c++) {
-                ClassifyJcStress_MyState_jcstress s = ss[c];
+                JcStressTest s = ss[c];
                 III_Result_jcstress r = rs[c];
                 r.trap = 0;
-                s.trap = 0;
-                lt.setConfig(s, r);
+                s.actor1(r);
             }
 
             holder.postRun();
 
-            jcstress_consume(holder, counter, 0, 1);
+            jcstress_consume(holder, counter, 0, 3);
+            jcstress_updateHolder(holder);
+
+            holder.postUpdate();
+        }
+    }
+
+    public final Counter<III_Result_jcstress> actor2() {
+
+        Counter<III_Result_jcstress> counter = new Counter<>();
+        while (true) {
+            StateHolder<JcStressTest,III_Result_jcstress> holder = version;
+            if (holder.stopped) {
+                return counter;
+            }
+
+            JcStressTest[] ss = holder.ss;
+            III_Result_jcstress[] rs = holder.rs;
+            int size = ss.length;
+
+            holder.preRun();
+
+            for (int c = 0; c < size; c++) {
+                JcStressTest s = ss[c];
+                III_Result_jcstress r = rs[c];
+                r.trap = 0;
+                s.actor2(r);
+            }
+
+            holder.postRun();
+
+            jcstress_consume(holder, counter, 1, 3);
+            jcstress_updateHolder(holder);
+
+            holder.postUpdate();
+        }
+    }
+
+    public final Counter<III_Result_jcstress> actor3() {
+
+        Counter<III_Result_jcstress> counter = new Counter<>();
+        while (true) {
+            StateHolder<JcStressTest,III_Result_jcstress> holder = version;
+            if (holder.stopped) {
+                return counter;
+            }
+
+            JcStressTest[] ss = holder.ss;
+            III_Result_jcstress[] rs = holder.rs;
+            int size = ss.length;
+
+            holder.preRun();
+
+            for (int c = 0; c < size; c++) {
+                JcStressTest s = ss[c];
+                III_Result_jcstress r = rs[c];
+                r.trap = 0;
+                s.actor3(r);
+            }
+
+            holder.postRun();
+
+            jcstress_consume(holder, counter, 2, 3);
             jcstress_updateHolder(holder);
 
             holder.postUpdate();

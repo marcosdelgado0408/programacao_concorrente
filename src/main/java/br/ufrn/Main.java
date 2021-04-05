@@ -8,10 +8,9 @@ import br.ufrn.segUnidade.ExecutorClassify;
 import br.ufrn.segUnidade.ForkJoin.ForkJoinClassify;
 import br.ufrn.segUnidade.ParallelStreamsClassify;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 
@@ -23,17 +22,18 @@ public class Main {
         ArrayList<Point> points = new ArrayList<>(); // adding dataset
 
         try {
-            File file = new File("yellow_tripdata_2016-01.csv");
-            Scanner scanner = new Scanner(file);
+            String currentLine;
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("yellow_tripdata_2016-01.csv"));
 
-            scanner.nextLine(); // pulando primeira linha
+            bufferedReader.readLine(); // pulando primeira linha
 
-            while(scanner.hasNextLine()){
-                String[] line = scanner.nextLine().split(",");
-                points.add(new Point( Double.parseDouble(line[3]), Double.parseDouble(line[4]), Double.parseDouble(line[12]) )); // x = passanger_count / y = trip_distance / val = fare_amount
+            while( (currentLine = bufferedReader.readLine() ) != null){
+                String[] splitedLine = currentLine.split(",");
+                points.add(new Point( Double.parseDouble(splitedLine[3]), Double.parseDouble(splitedLine[4]), Double.parseDouble(splitedLine[12]) )); // x = passanger_count / y = trip_distance / val = fare_amount
             }
+
         }
-        catch (FileNotFoundException e) {
+        catch (Exception e){
             e.printStackTrace();
         }
 
@@ -60,9 +60,9 @@ public class Main {
         ForkJoinClassify forkJoinClassify = new ForkJoinClassify();
         ParallelStreamsClassify parallelStreamsClassify = new ParallelStreamsClassify();
 
-//        System.out.println("The value classified to unknown point is " + callableFutureClassify.classifyPoint(arr, arr.length, k, p));
+        System.out.println("The value classified to unknown point is " + serialClassify.classifyPoint(arr, arr.length, k, p));
 
-        System.out.println("The value classified to unknown point is " + parallelStreamsClassify.classifyPoint(points, points.size(), k, p));
+//        System.out.println("The value classified to unknown point is " + parallelStreamsClassify.classifyPoint(points, points.size(), k, p));
 
     }
 
