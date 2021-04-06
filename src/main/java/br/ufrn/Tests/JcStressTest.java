@@ -26,21 +26,27 @@ public class JcStressTest {
     public JcStressTest(){
         List<Point> points = new ArrayList<>(); // adding dataset
 
-        try {
-            String currentLine;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("yellow_tripdata_2016-01.csv"));
+//        try {
+//            String currentLine;
+//            BufferedReader bufferedReader = new BufferedReader(new FileReader("yellow_tripdata_2016-01.csv"));
+//
+//            bufferedReader.readLine(); // pulando primeira linha
+//
+//            while( (currentLine = bufferedReader.readLine() ) != null){
+//                String[] splitedLine = currentLine.split(",");
+//                points.add(new Point( Double.parseDouble(splitedLine[3]), Double.parseDouble(splitedLine[4]), Double.parseDouble(splitedLine[12]) )); // x = passanger_count / y = trip_distance / val = fare_amount
+//            }
+//
+//
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
 
-            bufferedReader.readLine(); // pulando primeira linha
+        Random random = new Random();
 
-            while( (currentLine = bufferedReader.readLine() ) != null){
-                String[] splitedLine = currentLine.split(",");
-                points.add(new Point( Double.parseDouble(splitedLine[3]), Double.parseDouble(splitedLine[4]), Double.parseDouble(splitedLine[12]) )); // x = passanger_count / y = trip_distance / val = fare_amount
-            }
-
-
-        }
-        catch (Exception e){
-            e.printStackTrace();
+        for(int i=0;i<1000000;i++){
+            points.add(new Point(random.nextDouble(), random.nextDouble(), random.nextDouble()));
         }
 
         pointsArr = points;
@@ -53,59 +59,59 @@ public class JcStressTest {
 
     public void getDistance(){
 
-            for (Point point : pointsArr) {
-                point.distance = Math.sqrt((point.x - p.x) * (point.x - p.x) + (point.y - p.y) * (point.y - p.y)); // calculo distância euclidiana
-            }
-
+        for (Point point : pointsArr) {
+            point.distance = Math.sqrt((point.x - p.x) * (point.x - p.x) + (point.y - p.y) * (point.y - p.y)); // calculo distância euclidiana
         }
 
-        public void sortPointArray(){
+    }
 
-            pointsArr.sort((o1, o2) -> Double.compare(o1.distance, o2.distance));
+    public void sortPointArray(){
 
+        pointsArr.sort((o1, o2) -> Double.compare(o1.distance, o2.distance));
+
+    }
+
+    public void classifyAverage(){
+
+        double media = 0;
+        for(int i=0;i<k;i++){
+            media += pointsArr.get(i).val; // media dos precos da fare
         }
 
-        public void classifyAverage(){
+        media = media / k;
+        System.out.println(media);
 
-            double media = 0;
-            for(int i=0;i<k;i++){
-                media += pointsArr.get(i).val; // media dos precos da fare
-            }
-
-            media = media / k;
-            System.out.println(media);
-
-        }
+    }
 
 
 
 
-        @Actor
-        public void actor1(III_Result r){
-            r.r1 = 1;
-            r.r2 = 0;
-            r.r3 = 0;
-            this.getDistance();
+    @Actor
+    public void actor1(III_Result r){
+        r.r1 = 1;
+        r.r2 = 0;
+        r.r3 = 0;
+        this.getDistance();
 
-        }
+    }
 
-        @Actor
-        public void actor2(III_Result r){
-            r.r1 = 0;
-            r.r2 = 1;
-            r.r3 = 0;
-            this.sortPointArray();
+    @Actor
+    public void actor2(III_Result r){
+        r.r1 = 0;
+        r.r2 = 1;
+        r.r3 = 0;
+        this.sortPointArray();
 
-        }
+    }
 
 
-        @Actor
-        public void actor3(III_Result r){
-            r.r1 = 0;
-            r.r2 = 0;
-            r.r3 = 1;
-            this.classifyAverage();
-        }
+    @Actor
+    public void actor3(III_Result r){
+        r.r1 = 0;
+        r.r2 = 0;
+        r.r3 = 1;
+        this.classifyAverage();
+    }
 
 
 
