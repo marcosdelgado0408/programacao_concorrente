@@ -18,7 +18,7 @@ import org.openjdk.jcstress.infra.results.III_Result;
 @Outcome(id = "0, 0, 1", expect = Expect.ACCEPTABLE, desc = "get back 0-0-1")
 public class JcStressTest {
 
-    private final List<Point> pointsArr;
+    private final Point[] pointsArr;
     private final Point p = (new Point(2, 7.45));
     private int k = 3;
 
@@ -45,11 +45,11 @@ public class JcStressTest {
 
         Random random = new Random();
 
-        for(int i=0;i<1000000;i++){
+        for(int i=0;i<5;i++){
             points.add(new Point(random.nextDouble(), random.nextDouble(), random.nextDouble()));
         }
 
-        pointsArr = points;
+        pointsArr = points.toArray(new Point[0]);
 
     }
 
@@ -59,15 +59,15 @@ public class JcStressTest {
 
     public void getDistance(){
 
-        for (Point point : pointsArr) {
-            point.distance = Math.sqrt((point.x - p.x) * (point.x - p.x) + (point.y - p.y) * (point.y - p.y)); // calculo distância euclidiana
+        for(int i=0;i<this.pointsArr.length;i++){
+            pointsArr[i].distance = Math.sqrt((pointsArr[i].x - p.x) * (pointsArr[i].x - p.x) + (pointsArr[i].y - p.y) * (pointsArr[i].y - p.y)); // calculo distância euclidiana
         }
 
     }
 
     public void sortPointArray(){
 
-        pointsArr.sort((o1, o2) -> Double.compare(o1.distance, o2.distance));
+        Arrays.sort(pointsArr, (o1, o2) -> Double.compare(o1.distance, o2.distance));
 
     }
 
@@ -75,7 +75,7 @@ public class JcStressTest {
 
         double media = 0;
         for(int i=0;i<k;i++){
-            media += pointsArr.get(i).val; // media dos precos da fare
+            media += pointsArr[i].val; // media dos precos da fare
         }
 
         media = media / k;
